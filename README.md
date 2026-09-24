@@ -1,99 +1,44 @@
-# Practica de Maven
+# AED — Acceso a Datos
 
-Diego Gil
+Prácticas y proyectos del módulo de Acceso a Datos.
 
-## Lecciones 1 a 16
+## Datos
 
-**1**
+- Alumno: Diego Gil
+- Curso: 2.º DAM
+- Curso académico: 2026/2027
 
-![](capturas/01.png)
+## Contenidos
 
-Cambie el texto del programa pero no lo volvi a compilar, y por eso sigue saliendo el mensaje anterior
+### 1.er trimestre
 
-**2**
+- [Práctica de Maven](1er-trimestre/proyecto-maven/README.md): compilación, dependencias, perfiles, empaquetado y cambio de versión de Java.
+- [Ficheros](1er-trimestre/ficheros): rutas con `Path` y `File`, recursos del proyecto y lectura de CSV con Apache Commons CSV.
 
-![](capturas/02.png)
+### 2.º trimestre
 
-El proyecto ya esta creado con sus carpetas y Maven lo da por correcto
+Próximamente.
 
-**3**
+### 3.er trimestre
 
-![](capturas/03.png)
+Próximamente.
 
-Quite un punto y coma a proposito y Maven indica el archivo y la linea donde esta el fallo
+## Herramientas
 
-**4**
+- Java 21
+- Maven 3.9
+- IntelliJ IDEA
 
-![](capturas/04.png)
+## Cómo abrir un proyecto
 
-Maven va ejecutando los pasos uno detras de otro hasta crear el archivo final
+Cada carpeta con un `pom.xml` es un proyecto Maven independiente.
 
-**5**
+1. En IntelliJ IDEA, **File → Open** y elegir la carpeta del proyecto.
+2. Esperar a que Maven descargue las dependencias.
+3. Ejecutar la clase que tiene el método `main`.
 
-![](capturas/05.png)
+Desde la terminal, dentro de la carpeta del proyecto:
 
-Maven descarga la libreria Gson y la muestra en la lista
-
-**6**
-
-![](capturas/06.png)
-
-El perfil que puse en el archivo de configuracion aparece como activo
-
-**7**
-
-![](capturas/07.png)
-
-Se crean dos archivos, uno normal y otro que lleva la libreria dentro y funciona solo
-
-**8**
-
-![](capturas/08.png)
-
-Dos librerias piden lo mismo en versiones distintas y Maven se queda con una
-
-**9**
-
-![](capturas/09.png)
-
-Estropee una prueba a proposito, falla y Maven detiene la construccion
-
-**10**
-
-![](capturas/10.png)
-
-El programa se ejecuta desde la terminal y muestra su resultado
-
-## Practica integradora
-
-El segundo JDK lo instale con `sudo apt install openjdk-17-jdk`
-
-**11**
-
-![](capturas/11.png)
-
-Mi usuario, la carpeta de trabajo y las versiones de Java y Maven instaladas
-
-**12**
-
-![](capturas/12.png)
-
-Despues de cambiar a Java 17, las tres herramientas muestran esa version
-
-**13**
-
-![](capturas/13.png)
-
-Con Java 17 la construccion falla, porque el proyecto pide Java 21
-
-**14**
-
-![](capturas/14.png)
-
-Vuelvo a Java 21 y las herramientas lo confirman
-
-**15**
-
-![](capturas/15.png)
-
-Con Java 21 la construccion termina bien y se genera el archivo
+```bash
+mvn compile
+```
