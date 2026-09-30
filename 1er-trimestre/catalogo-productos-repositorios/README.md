@@ -9,23 +9,18 @@ Proyecto Maven limpio para realizar el ejercicio.
 - `com.ejemplo.catalogo.repository.file`
 - `com.ejemplo.catalogo.repository.file.csv`
 
-No se incluye ninguna clase Java resuelta.
-
 ## Estado
 
-En curso. `CsvRepository` carga el CSV en la lista `productos` al crearse y `findAll()` devuelve esa lista.
+Versión de la clase del 29/09/2026:
 
-Todavía no compila:
-
-- El constructor llama a `load()`, pero el método se llama `find()`.
-- En `delete()` hay que cambiar `Productop ->` por `p ->` y añadir el `return`.
-- `saveAll` todavía no existe.
+- `IRepository`: interfaz con las operaciones CRUD.
+- `AbstractRepository`: clase abstracta con lo común (ruta del fichero, lista `productos`, `findAll`, `findById`, `create`, `update` y `delete`). Cada formato implementa `load()` y `saveAll()`.
+- `CsvRepository`: lee y escribe `data/productos.csv` con Apache Commons CSV.
+- `JsonRepository`: lee y escribe `data/productos.json` con Jackson.
 
 ## Para practicar
 
-Próxima clase: lunes 28/09/2026.
-
-- [ ] Hacer `saveAll` para escribir la lista `productos` en el CSV.
-- [ ] Completar `findById`, `create`, `update` y `delete` usando la lista cargada y `saveAll`.
-- [ ] Refactorizar `CsvRepository`.
-- [ ] Usar clases abstractas: sacar lo común de los repositorios de ficheros a una clase abstracta y dejar en `CsvRepository` solo lo del CSV.
+- [x] Hacer `saveAll` para escribir la lista `productos` en el fichero.
+- [x] Completar `findById`, `create`, `update` y `delete` usando la lista cargada y `saveAll`.
+- [x] Refactorizar `CsvRepository`.
+- [x] Usar clases abstractas: `AbstractRepository` con lo común y `CsvRepository` y `JsonRepository` con lo de cada formato.

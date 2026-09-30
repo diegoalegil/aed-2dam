@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class CsvCrudDemo {
-    public record Producto(long id, String nombre, double precio) {}
+    public record Producto(long id, String nombre, double precio) {
+
+    }
 
     private final Path path;
     private final CSVFormat inputFormat = CSVFormat.DEFAULT.builder()
@@ -83,9 +85,7 @@ public class CsvCrudDemo {
     }
 
     public static void main(String[] args) throws IOException {
-        Path csv = Path.of("data", "productos.csv");
-        Files.deleteIfExists(csv); // empezar de cero: si no, la segunda ejecución da "Id duplicado: 1"
-        CsvCrudDemo repo = new CsvCrudDemo(csv);
+        CsvCrudDemo repo = new CsvCrudDemo(Path.of("data", "productos.csv"));
         repo.create(new Producto(1, "Teclado", 49.99));
         repo.create(new Producto(2, "Monitor, 27 pulgadas", 219.90));
         System.out.println(repo.findById(2).orElseThrow());
