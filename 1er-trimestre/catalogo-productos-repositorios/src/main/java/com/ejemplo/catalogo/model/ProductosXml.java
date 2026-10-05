@@ -12,8 +12,6 @@ public class ProductosXml {
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "producto")
-
-
     public List<Producto> productos;
 
     public ProductosXml() {

@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class CsvRepository extends AbstractRepository {
+public class CsvProductoRepository extends AbstractFileRepository<Producto, Long> implements IProductoRepository {
 
     private final CSVFormat inputFormat = CSVFormat.DEFAULT.builder()
             .setHeader()
@@ -24,19 +24,17 @@ public class CsvRepository extends AbstractRepository {
             .setHeader("id", "nombre", "precio")
             .get();
 
-
-    CsvRepository(Path path) {
+    public CsvProductoRepository(Path path) {
         super(path);
-        productos = load();
     }
 
-    @Override
-    public List<Producto> load() {
 
+    @Override
+    protected List<Producto> readAll() {
         try (Reader reader = Files.newBufferedReader(getPath(), StandardCharsets.UTF_8);
              CSVParser parser = inputFormat.parse(reader)) {
             for (CSVRecord row : parser) {
-                productos.add(new Producto(
+                list.add(new Producto(
                         Long.parseLong(row.get("id")),
                         row.get("nombre"),
                         Double.parseDouble(row.get("precio"))));
@@ -44,22 +42,16 @@ public class CsvRepository extends AbstractRepository {
         } catch (IOException e) {
             //Logger.ERROR //FINE
         }
-        return productos;
+        return list;
     }
 
-
-
-
-
     @Override
-    public void saveAll(List<Producto> items)  {
-
+    protected void writeAll(List<Producto> elements) {
         try (Writer writer = Files.newBufferedWriter(getPath(), StandardCharsets.UTF_8);
              CSVPrinter printer = new CSVPrinter(writer, outputFormat)) {
-            for (Producto p : items) printer.printRecord(p.id(), p.nombre(), p.precio());
+            for (Producto p : elements) printer.printRecord(p.id(), p.nombre(), p.precio());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 }

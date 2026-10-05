@@ -14,7 +14,7 @@ Prácticas y proyectos del módulo de Acceso a Datos.
 
 - [Práctica de Maven](1er-trimestre/proyecto-maven/README.md): compilación, dependencias, perfiles, empaquetado y cambio de versión de Java.
 - [Ficheros](1er-trimestre/ficheros): rutas con `Path` y `File`, recursos del proyecto y lectura de CSV con Apache Commons CSV.
-- [Catálogo de productos con repositorios](1er-trimestre/catalogo-productos-repositorios/README.md): CRUD de productos en CSV, JSON y XML con una interfaz y una clase abstracta de repositorio, y configuración con `.properties`. En curso, con [tareas para practicar](1er-trimestre/catalogo-productos-repositorios/README.md#para-practicar).
+- [Catálogo de productos con repositorios](1er-trimestre/catalogo-productos-repositorios/README.md): CRUD de productos en CSV, JSON y XML con una interfaz genérica y una clase abstracta de repositorio, y configuración con `.properties`. En curso, con [tareas para practicar](1er-trimestre/catalogo-productos-repositorios/README.md#para-practicar).
 
 ### 2.º trimestre
 

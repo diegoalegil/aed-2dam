@@ -2,33 +2,29 @@ package com.ejemplo.catalogo.repository.file.csv;
 
 import com.ejemplo.catalogo.model.Producto;
 import com.ejemplo.catalogo.model.ProductosXml;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-public class XmlRepository extends AbstractRepository{
+public class XmlProductoRepository extends AbstractProductoRepository {
     private final XmlMapper mapper;
-    public XmlRepository(Path path) {
+    public XmlProductoRepository(Path path) {
         super(path);
-        mapper = new XmlMapper();
         productos = load();
+        mapper = new XmlMapper();
     }
 
     @Override
-    public void saveAll(List<Producto> items) {
-        Path temporal = null;
+    public void saveAll(List<Producto> productos) {
         try {
             ProductosXml productosXml = new ProductosXml();
             productosXml.setProductos(productos);
             mapper.writerWithDefaultPrettyPrinter()
                     .writeValue(getPath().toFile(), productosXml);
+
         } catch (IOException e) {
             throw new UncheckedIOException("No se pudo guardar " + getPath(), e);
         } finally {
@@ -39,9 +35,9 @@ public class XmlRepository extends AbstractRepository{
     public List<Producto> load() {
 
         try {
-            ProductosXml data = mapper.readValue(path.toFile(), ProductosXml.class);
+            ProductosXml productosXml = mapper.readValue(getPath().toFile(), ProductosXml.class);
             productos.clear();
-            productos.addAll(data.getProductos());
+            productos.addAll(productosXml.getProductos());
         } catch (IOException e) {
             throw new UncheckedIOException("No se pudo cargar " + getPath(), e);
         }

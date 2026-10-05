@@ -11,14 +11,16 @@ Proyecto Maven limpio para realizar el ejercicio.
 
 ## Estado
 
-Versión de la clase del 30/09/2026:
+Versión de la clase del 01/10/2026 (refactorización a genéricos, a medias):
 
-- `IRepository`: interfaz con las operaciones CRUD.
-- `AbstractRepository`: clase abstracta con lo común (ruta del fichero, lista `productos`, `findAll`, `findById`, `create`, `update` y `delete`). Cada formato implementa `load()` y `saveAll()`.
-- `CsvRepository`: lee y escribe `data/productos.csv` con Apache Commons CSV.
-- `JsonRepository`: lee y escribe `data/productos.json` con Jackson.
-- `XmlRepository`: lee y escribe XML con Jackson XML usando la clase envolvente `ProductosXml` (raíz `<productos>` con un `<producto>` por elemento).
-- `AppConfiguration`: lee y escribe `data/app.propierties` con `Properties` (`storage.format` y `storage.path`).
+- `IRepository<T, ID>`: interfaz genérica con las operaciones CRUD.
+- `IProductoRepository`: `IRepository<Producto, Long>` para productos.
+- `Identificable<ID>`: interfaz con `id()`. La implementa `Producto`, que ahora tiene `Long id`.
+- `AbstractFileRepository<T, ID>`: clase abstracta genérica con lo común (ruta del fichero, lista `list`, `findAll`, `findById`, `create`, `update` y `delete`). Cada formato implementa `readAll()` y `writeAll()`.
+- `AbstractProductoRepository`: `AbstractFileRepository<Producto, Long>` para productos.
+- `CsvProductoRepository`: lee y escribe `data/productos.csv` con Apache Commons CSV, ya con `readAll()` y `writeAll()`.
+- `JsonProductoRepository` y `XmlProductoRepository`: renombrados, pero todavía usan `load()`, `saveAll()` y `productos`, así que el proyecto aún no compila.
+- `AppConfiguration`: lee y escribe `data/app.properties` (antes `app.propierties`) y, si `storage.format` es `json`, crea un `JsonProductoRepository` con la ruta de `storage.path`.
 
 ## Para practicar
 
@@ -26,4 +28,6 @@ Versión de la clase del 30/09/2026:
 - [x] Completar `findById`, `create`, `update` y `delete` usando la lista cargada y `saveAll`.
 - [x] Refactorizar `CsvRepository`.
 - [x] Usar clases abstractas: `AbstractRepository` con lo común y `CsvRepository` y `JsonRepository` con lo de cada formato.
-- [ ] Mini proyecto: arrancar la aplicación eligiendo el repositorio (CSV, JSON o XML) según `storage.format` y `storage.path` de `app.propierties`.
+- [x] Generalizar la interfaz y la clase abstracta con genéricos (`IRepository<T, ID>` y `AbstractFileRepository<T, ID>`).
+- [ ] Adaptar `JsonProductoRepository` y `XmlProductoRepository` a `readAll()` y `writeAll()`.
+- [ ] Mini proyecto: arrancar la aplicación eligiendo el repositorio (CSV, JSON o XML) según `storage.format` y `storage.path` de `app.properties`. De momento solo está el caso JSON.
