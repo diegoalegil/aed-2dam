@@ -1,0 +1,8 @@
+Toma el fichero en este formato, y dime la media, el stock, que tenemos que saber???, como implementar eso o incluso en funcion saber rellenar funciones, desarrollarlas, la parte de abstract file va a estar pelada y nosotros rellenar toda la informacion, entonces el nos va a pedir ciertas funciones que son mas que todo algoritmia, hay que saber hacer pefectamente todo, service, repository etc, por ejemplo una funcion como el damelas todas, pero tambien otras como el mas vendido, el mas caro, el mas barato, la media, dime cuantos hay, el nos da un json con 5 elementos por ejemplo y nos tiene que dar 5, el no nos va a pedir de memoria las clases y todo esto, el se sabe el mapper y sabe jugar con ello, que es lo que tenemos que saber, una de las cosas que vamos a hacer ahora es esto: https://codelearnacademy.github.io/orm/ (OJO ESTO ES PARA EL SIGUIENTE EXAMEN NO PARA EL ACTUAL). A partir de ahora algo demasiado importante es sql, saber hacer consultas a tope, con por ejemplo 4 tablas saber hacer todo tipo de sentencias sql
+Hasta ayer CSVDEmo, XMLDemos, JsonDemo, por una api comun llamada IRepository
+que hace por ejemplo: findAll, findById, save, add, delete, update
+Ahora despues del examen sabremos hacer eso con sqlite3, no solo con csv, json y xml
+ORM, una libreria que se pone como en medio de Java y de la BBDD, y transforma el codigo java en algo que entiende la bbdd
+Lo primero es saber si la bdd existe, con un path, porque es una base de datos local, podemos usar File/Files para saber si existe
+Si existe lo primero que hacer es conectar, lo segundo operar, lo tercero desconectar/cerrar siempre hay que verificar y forzar, osea que cuando termine vaya bien o mal esa conexion con la bbdd se termine
+el ORM nos hace todo este trabajo
