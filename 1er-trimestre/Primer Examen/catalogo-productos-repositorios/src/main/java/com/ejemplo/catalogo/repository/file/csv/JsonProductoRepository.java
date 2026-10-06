@@ -15,19 +15,19 @@ public class JsonProductoRepository extends AbstractProductoRepository {
     private final ObjectMapper mapper;
     public JsonProductoRepository(Path path) {
         super(path);
-        productos = load();
         mapper = new ObjectMapper();
+        list = readAll();
     }
 
     @Override
-    public void saveAll(List<Producto> items) {
+    protected void writeAll(List<Producto> elements) {
         Path temporal = null;
         try {
             Path destino = getPath().toAbsolutePath();
             Path directorio = destino.getParent();
             Files.createDirectories(directorio);
             temporal = Files.createTempFile(directorio, "productos-", ".json.tmp");
-            mapper.writerWithDefaultPrettyPrinter().writeValue(temporal.toFile(), productos);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(temporal.toFile(), elements);
             try {
                 Files.move(temporal, destino,
                         StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
@@ -44,19 +44,22 @@ public class JsonProductoRepository extends AbstractProductoRepository {
     }
 
     @Override
-    public List<Producto> load() {
+    protected List<Producto> readAll() {
 
         try {
+            if (Files.size(getPath()) == 0) {
+                return list;
+            }
             List<Producto> leidos = mapper.readValue(
                     getPath().toFile(), new TypeReference<List<Producto>>() {});
             if (leidos == null) {
                 throw new IllegalArgumentException("El JSON debe contener una lista, no null");
             }
-            productos.clear();
-            productos.addAll(leidos);
+            list.clear();
+            list.addAll(leidos);
         } catch (IOException e) {
             throw new UncheckedIOException("No se pudo cargar " + getPath(), e);
         }
-        return productos;
+        return list;
     }
 }

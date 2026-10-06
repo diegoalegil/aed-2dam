@@ -1,7 +1,9 @@
 package com.ejemplo.catalogo.configuration;
 
+import com.ejemplo.catalogo.repository.file.csv.CsvProductoRepository;
 import com.ejemplo.catalogo.repository.file.csv.IProductoRepository;
 import com.ejemplo.catalogo.repository.file.csv.JsonProductoRepository;
+import com.ejemplo.catalogo.repository.file.csv.XmlProductoRepository;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,7 +35,12 @@ public class AppConfiguration {
         }
         if (props.getProperty("storage.format").equals("json")) {
             repository = new JsonProductoRepository(Path.of(props.getProperty("storage.path")));
+        } else if (props.getProperty("storage.format").equals("csv")) {
+            repository = new CsvProductoRepository(Path.of(props.getProperty("storage.path")));
+        } else if (props.getProperty("storage.format").equals("xml")) {
+            repository = new XmlProductoRepository(Path.of(props.getProperty("storage.path")));
         }
+        System.out.println(repository.findAll());
     }
 
 

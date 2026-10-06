@@ -5,13 +5,14 @@ import com.ejemplo.catalogo.model.Identificable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractFileRepository <T extends Identificable<ID>, ID>
         implements IRepository<T, ID> {
     Path path;
-    List<T> list;
+    List<T> list = new ArrayList<>();
 
     public Path getPath() {
         return path;
@@ -49,7 +50,7 @@ public abstract class AbstractFileRepository <T extends Identificable<ID>, ID>
         if (element == null || element.id()  == null) {
             return;
         }
-        if (list.stream().anyMatch(p -> p.id() == element.id()))
+        if (list.stream().anyMatch(p -> p.id().equals(element.id())))
             throw new IllegalArgumentException("Id duplicado: " + element.id());
         list.add(element);
         writeAll(list);
@@ -61,7 +62,7 @@ public abstract class AbstractFileRepository <T extends Identificable<ID>, ID>
             return false;
         }
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).id() == element.id()) {
+            if (list.get(i).id().equals(element.id())) {
                 list.set(i, element);
                 writeAll(list);
                 return true;
@@ -72,7 +73,7 @@ public abstract class AbstractFileRepository <T extends Identificable<ID>, ID>
     @Override
     public boolean delete(ID id) {
 
-        boolean removed = list.removeIf(p -> p.id() == id);
+        boolean removed = list.removeIf(p -> p.id().equals(id));
         if (removed) {
             writeAll(list);
         }
