@@ -1,7 +1,5 @@
 package es.ejemplo.gestion.model;
 
-import java.util.Objects;
-
 public class Producto {
     private final int id;
     private final String nombre;
@@ -13,27 +11,7 @@ public class Producto {
         this.precio = precio;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Producto producto = (Producto) o;
-        return id == producto.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int getId() { return id; }
+    public String getNombre() { return nombre; }
+    public double getPrecio() { return precio; }
 }
