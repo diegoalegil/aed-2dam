@@ -17,16 +17,24 @@ public class ConexionBD {
 
     public ConexionBD(String url) {
         this.url = url;
-        Path path = Path.of(url);
-
     }
 
     public Connection obtenerConexion() {
 
-        try (Connection connection = DriverManager.getConnection(url)) {
-            return connection;
+        String ruta =url.replace("jdbc:sqlite:", "");
+
+       Path path = Path.of(ruta);
+
+       if (Files.notExists(path)){
+           throw new AplicationException("Error encontrando la ruta");
+       }
+
+        try {
+
+            return DriverManager.getConnection(url);
+
         } catch (SQLException e) {
-            throw new AplicationException("Error conectando a la bbdd");
+            throw new AplicationException("Error conectandose a la base de datos", e);
         }
     }
 }
