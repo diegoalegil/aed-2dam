@@ -32,20 +32,18 @@ public class ConexionBD {
 
         Path carpeta = path.getParent();
 
-        try {
-            if (Files.notExists(carpeta)) {
-                Files.createDirectories(carpeta);
-            }
+        if (Files.notExists(carpeta)) {
             try {
-                return DriverManager.getConnection(url);
-            } catch (SQLException e) {
-                throw new AplicationException("Error creando la conexion", e);
+                Files.createDirectories(carpeta);
+            } catch (IOException e) {
+                throw new AplicationException("Error creando la ruta", e);
             }
-        } catch (IOException e) {
-            throw new AplicationException("Error creando la carpeta ", e);
         }
-
-
+        try {
+            return DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            throw new AplicationException("Error conectando con la base", e);
+        }
     }
 
     /**
@@ -61,10 +59,10 @@ public class ConexionBD {
                     "    episodios INTEGER NOT NULL,\n" +
                     "    nota      REAL    NOT NULL\n" +
                     ");\n");
-             preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new AplicationException("Error inicializando la conexion" ,e);
+            throw new AplicationException("Error inicializando la conexion", e);
         }
     }
 }
