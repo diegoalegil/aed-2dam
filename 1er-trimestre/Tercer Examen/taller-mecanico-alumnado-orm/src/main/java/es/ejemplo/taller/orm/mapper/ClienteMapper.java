@@ -3,11 +3,7 @@ package es.ejemplo.taller.orm.mapper;
 import es.ejemplo.taller.modelo.Cliente;
 import es.ejemplo.taller.orm.entity.ClienteEntity;
 
-// Guía §11: traduce entre modelo.Cliente y ClienteEntity
 public class ClienteMapper {
-
-    private ClienteMapper() {
-    }
 
     public static ClienteEntity toEntity(Cliente cliente) {
         return new ClienteEntity(cliente.getIdCliente(), cliente.getNombre(),

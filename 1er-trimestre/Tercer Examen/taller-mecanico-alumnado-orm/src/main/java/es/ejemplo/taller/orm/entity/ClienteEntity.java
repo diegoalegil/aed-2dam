@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "clientes")
-public class  ClienteEntity {
+public class ClienteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente")
@@ -60,5 +60,4 @@ public class  ClienteEntity {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-// Genera getters y setters de los cuatro atributos con el IDE.
 }
