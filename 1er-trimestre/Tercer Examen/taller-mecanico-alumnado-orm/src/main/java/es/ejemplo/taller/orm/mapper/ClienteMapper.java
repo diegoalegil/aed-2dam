@@ -1,19 +1,21 @@
 package es.ejemplo.taller.orm.mapper;
 
 import es.ejemplo.taller.modelo.Cliente;
+import es.ejemplo.taller.orm.entity.ClienteEntity;
 
 // Guía §11: traduce entre modelo.Cliente y ClienteEntity
-public final class ClienteMapper {
+public class ClienteMapper {
 
-    private ClienteMapper() {}
-
-    public static es.ejemplo.taller.orm.entity.ClienteEntity toEntity(Cliente cliente) {
-        // TODO: crear la entidad con los datos del modelo
-        return null;
+    private ClienteMapper() {
     }
 
-    public static Cliente toDomain(es.ejemplo.taller.orm.entity.ClienteEntity entidad) {
-        // TODO: crear el modelo con los datos de la entidad
-        return null;
+    public static ClienteEntity toEntity(Cliente cliente) {
+        return new ClienteEntity(cliente.getIdCliente(), cliente.getNombre(),
+                cliente.getEmail(), cliente.getTelefono());
+    }
+
+    public static Cliente toDomain(ClienteEntity entidad) {
+        return new Cliente(entidad.getIdCliente(), entidad.getNombre(),
+                entidad.getEmail(), entidad.getTelefono());
     }
 }
