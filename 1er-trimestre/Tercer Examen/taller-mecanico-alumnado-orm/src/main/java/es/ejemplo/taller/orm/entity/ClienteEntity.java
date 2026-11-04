@@ -33,10 +33,6 @@ public class ClienteEntity {
         return idCliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
-    }
-
     public String getNombre() {
         return nombre;
     }
