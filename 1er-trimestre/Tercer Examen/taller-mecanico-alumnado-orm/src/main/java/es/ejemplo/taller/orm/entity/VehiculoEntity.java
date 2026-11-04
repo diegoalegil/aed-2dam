@@ -29,6 +29,8 @@ public class VehiculoEntity {
         return matricula;
     }
 
+    protected VehiculoEntity() {} // Necesario para JPA
+
     public VehiculoEntity(String matricula, String marca, String modelo, Integer anio, Integer idCliente) {
         this.matricula = matricula;
         this.marca = marca;
