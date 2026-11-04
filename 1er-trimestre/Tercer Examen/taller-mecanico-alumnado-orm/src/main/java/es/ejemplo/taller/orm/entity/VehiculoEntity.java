@@ -36,7 +36,7 @@ public class VehiculoEntity {
         this.anio = anio;
         this.idCliente = idCliente;
     }
-    
+
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
