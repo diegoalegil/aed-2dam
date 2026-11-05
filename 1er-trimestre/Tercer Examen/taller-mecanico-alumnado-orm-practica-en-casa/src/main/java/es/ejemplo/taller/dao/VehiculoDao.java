@@ -17,7 +17,7 @@ public class VehiculoDao {
 
     public VehiculoDao(String url) {
         this.url = url;
-        managerFactory = OrmFactory.crear(url);
+        this.managerFactory = OrmFactory.crear(url);
     }
 
     public List<Vehiculo> listar() {
@@ -32,7 +32,7 @@ public class VehiculoDao {
 
     public Optional<Vehiculo> buscarPorId(String id) {
 
-        if (id == null) {
+        if (id == null || id.isEmpty()) {
             return Optional.empty();
         }
         try (var em = managerFactory.createEntityManager()) {
@@ -92,7 +92,7 @@ public class VehiculoDao {
 
     public int eliminar(String id) {
 
-        if (id == null) {
+        if (id == null || id.isEmpty()) {
             return 0;
         }
 
@@ -116,16 +116,16 @@ public class VehiculoDao {
     }
 
 
-    public List<Vehiculo> buscarPorCliente(Integer idCliente) {
+    public List<Vehiculo> buscarPorCliente(Integer id) {
 
-        if (idCliente == null || idCliente < 0) {
+        if (id == null || id < 0) {
             return new ArrayList<>();
         }
 
         try (var em = managerFactory.createEntityManager()) {
-            return em.createQuery("SELECT v FROM VehiculoEntity v WHERE v.idCliente = :idCliente",
+            return em.createQuery("SELECT v FROM VehiculoEntity v WHERE v.idCliente = :id",
                             VehiculoEntity.class)
-                    .setParameter("idCliente", idCliente)
+                    .setParameter("id", id)
                     .getResultStream()
                     .map(VehiculoMapper::toDomain)
                     .toList();
