@@ -1,38 +1,150 @@
 package es.ejemplo.taller.dao;
+
 import es.ejemplo.taller.modelo.Vehiculo;
+import es.ejemplo.taller.orm.config.OrmFactory;
+import es.ejemplo.taller.orm.entity.VehiculoEntity;
+import es.ejemplo.taller.orm.mapper.VehiculoMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+
 import java.sql.*;
 import java.util.*;
 import java.math.BigDecimal;
-public class VehiculoDao  {
+
+public class VehiculoDao {
     private final String url;
-    public VehiculoDao(String url) { this.url = url; }
+    private final EntityManagerFactory managerFactory;
+
+    public VehiculoDao(String url) {
+        this.url = url;
+        managerFactory = OrmFactory.crear(url);
+    }
 
     public List<Vehiculo> listar() {
-        // TODO: implementar según el contrato del README.
-        return List.of();
+        try (var em = managerFactory.createEntityManager()) {
+            return em.createQuery("select v from VehiculoEntity v order by v.matricula",
+                            VehiculoEntity.class)
+                    .getResultStream()
+                    .map(VehiculoMapper::toDomain)
+                    .toList();
+        }
     }
+
     public Optional<Vehiculo> buscarPorId(String id) {
-        // TODO: implementar según el contrato del README.
-        return Optional.empty();
+
+        if (id == null) {
+            return Optional.empty();
+        }
+        try (var em = managerFactory.createEntityManager()) {
+            return Optional.ofNullable(em.find(VehiculoEntity.class, id))
+                    .map(VehiculoMapper::toDomain);
+
+        }
     }
+
     public int insertar(Vehiculo dato) {
-        // TODO: implementar según el contrato del README.
-        return 0;
+
+        if (dato == null || dato.getMatricula() == null || dato.getMatricula().isBlank()) {
+            return 0;
+        }
+
+        try (var em = managerFactory.createEntityManager()) {
+            var tx = em.getTransaction();
+            try {
+                tx.begin();
+                em.persist(VehiculoMapper.toEntity(dato));
+                tx.commit();
+                return 1;
+            } catch (RuntimeException ex) {
+                if (tx.isActive()) tx.rollback();
+                return 0;
+            }
+        }
     }
+
     public int actualizar(Vehiculo dato) {
-        // TODO: implementar según el contrato del README.
-        return 0;
+
+        if (dato == null) {
+            return 0;
+        }
+
+        try (var em = managerFactory.createEntityManager()) {
+            var tx = em.getTransaction();
+            try {
+                tx.begin();
+                VehiculoEntity v = em.find(VehiculoEntity.class, dato.getMatricula());
+                if (v == null) {
+                    tx.commit();
+                    return 0;
+                }
+                v.setMarca(dato.getMarca());
+                v.setModelo(dato.getModelo());
+                v.setAnio(dato.getAnio());
+                v.setIdCliente(dato.getIdCliente());
+                tx.commit();
+                return 1;
+            } catch (RuntimeException ex) {
+                if (tx.isActive()) tx.rollback();
+                return 0;
+            }
+        }
     }
+
     public int eliminar(String id) {
-        // TODO: implementar según el contrato del README.
-        return 0;
+
+        if (id == null) {
+            return 0;
+        }
+
+        try (var em = managerFactory.createEntityManager()) {
+            var tx = em.getTransaction();
+            try {
+                tx.begin();
+                VehiculoEntity v = em.find(VehiculoEntity.class, id);
+                if (v == null) {
+                    tx.commit();
+                    return 0;
+                }
+                em.remove(v);
+                tx.commit();
+                return 1;
+            } catch (RuntimeException ex) {
+                if (tx.isActive()) tx.rollback();
+                return 0;
+            }
+        }
     }
+
+
     public List<Vehiculo> buscarPorCliente(Integer idCliente) {
-        // TODO: implementar según el contrato del README.
-        return List.of();
+
+        if (idCliente == null || idCliente < 0) {
+            return new ArrayList<>();
+        }
+
+        try (var em = managerFactory.createEntityManager()) {
+            return em.createQuery("SELECT v FROM VehiculoEntity v WHERE v.idCliente = :idCliente",
+                            VehiculoEntity.class)
+                    .setParameter("idCliente", idCliente)
+                    .getResultStream()
+                    .map(VehiculoMapper::toDomain)
+                    .toList();
+
+        }
     }
+
     public List<Vehiculo> listarPorMarca(String marca) {
-        // TODO: implementar según el contrato del README.
-        return List.of();
+
+        if (marca == null || marca.isBlank()) {
+            return new ArrayList<>();
+        }
+
+        try (var em = managerFactory.createEntityManager()) {
+            return em.createQuery("select v from VehiculoEntity v where v.marca =:marca", VehiculoEntity.class)
+                    .setParameter("marca", marca)
+                    .getResultStream()
+                    .map(VehiculoMapper::toDomain)
+                    .toList();
+        }
     }
 }
