@@ -146,7 +146,7 @@ public class PeliculaDao {
     public List<Pelicula> peliculasDesdeAnio(int anio) {
 
         try (var em = emf.createEntityManager()) {
-            return em.createQuery("select p from PeliculaEntity p where p.anio >= :anio", PeliculaEntity.class)
+            return em.createQuery("select p from PeliculaEntity p where p.anio >= :anio order by p.idPelicula", PeliculaEntity.class)
                     .setParameter("anio", anio)
                     .getResultStream()
                     .map(PeliculaMapper::desdeEntidad)
@@ -175,7 +175,7 @@ public class PeliculaDao {
     public List<Object[]> peliculasConMediaValoraciones() {
 
         try (var em = emf.createEntityManager()) {
-            return em.createQuery("select p.titulo, count(v.idValoracion), avg(v.puntuacion) from PeliculaEntity p left join ValoracionEntity v on v.idPelicula = p.idPelicula group by p.idPelicula, p.titulo order by p.titulo", Object[].class)
+            return em.createQuery("select p.titulo, count(v.idValoracion), round(avg(v.puntuacion), 2) from PeliculaEntity p left join ValoracionEntity v on v.idPelicula = p.idPelicula group by p.idPelicula, p.titulo order by p.titulo", Object[].class)
                     .getResultList();
         } catch (RuntimeException ex) {
             LOG.warning("peliculasConMediaValoraciones: " + ex);
@@ -187,7 +187,7 @@ public class PeliculaDao {
     public List<Object[]> mejorValoradas(int minimo) {
 
         try (var em = emf.createEntityManager()) {
-            return em.createQuery("TODO", Object[].class)
+            return em.createQuery("select p.titulo, count(v.idValoracion), round(avg(v.puntuacion), 2) from PeliculaEntity p left join ValoracionEntity v on v.idPelicula = p.idPelicula group by p.idPelicula, p.titulo having count(v.idValoracion) >= :minimo order by avg(v.puntuacion) desc, p.titulo", Object[].class)
                     .setParameter("minimo", minimo)
                     .getResultList();
         } catch (RuntimeException ex) {
@@ -201,11 +201,15 @@ public class PeliculaDao {
 
         try (var em = emf.createEntityManager()) {
             // 1) la media: entradas válidas entre el número de películas (dos count)
-            Long validas = em.createQuery("TODO", Long.class).getSingleResult();
-            Long pelis = em.createQuery("TODO", Long.class).getSingleResult();
+            Long validas = em.createQuery("select count(e) from EntradaEntity e where e.estado in ('PAGADA','USADA')", Long.class).getSingleResult();
+            Long pelis = em.createQuery("select count(p) from PeliculaEntity p", Long.class).getSingleResult();
             double media = validas * 1.0 / pelis;
             // 2) la consulta del reto, comparando con :media
-            return em.createQuery("TODO", Object[].class)
+            return em.createQuery("select p.titulo, count(e.idEntrada) "
+                            + "from PeliculaEntity p left join SesionEntity s on s.idPelicula = p.idPelicula "
+                            + "left join EntradaEntity e on e.idSesion = s.idSesion and e.estado in ('PAGADA','USADA') "
+                            + "group by p.idPelicula, p.titulo having count(e.idEntrada) * 1.0 > :media "
+                            + "order by count(e.idEntrada) desc, p.titulo", Object[].class)
                     .setParameter("media", media)
                     .getResultList();
         } catch (RuntimeException ex) {
@@ -218,7 +222,10 @@ public class PeliculaDao {
     public List<Object[]> estadisticasGenero() {
 
         try (var em = emf.createEntityManager()) {
-            return em.createQuery("TODO", Object[].class)
+            return em.createQuery("select p.genero, count(distinct p.idPelicula), count(distinct s.idSesion), count(e.idEntrada) "
+                            + "from PeliculaEntity p left join SesionEntity s on s.idPelicula = p.idPelicula "
+                            + "left join EntradaEntity e on e.idSesion = s.idSesion and e.estado in ('PAGADA','USADA') "
+                            + "group by p.genero order by p.genero", Object[].class)
                     .getResultList();
         } catch (RuntimeException ex) {
             LOG.warning("estadisticasGenero: " + ex);
