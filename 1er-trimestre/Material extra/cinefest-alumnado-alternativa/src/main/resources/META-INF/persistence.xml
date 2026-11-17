@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Raíz del fichero de JPA: es la configuración del ORM (en JDBC esto sería la URL y el driver en el código). version 3.1 es la versión de Jakarta Persistence -->
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.1">
+    <!-- Unidad de persistencia: es un grupo de entidades y ajustes. El name es el que se pasa a Persistence.createEntityManagerFactory (ver OrmFactory). RESOURCE_LOCAL: las transacciones las controla el programa con begin y commit, sin servidor de aplicaciones -->
+    <persistence-unit name="cinefestPU" transaction-type="RESOURCE_LOCAL">
+        <!-- Proveedor: la implementación de JPA que se usa, que aquí es Hibernate -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!-- Lista de entidades: cada clase con @Entity debe aparecer aquí. Si falta una, Hibernate dice que no es una entidad conocida -->
+        <class>es.ejemplo.cinefest.orm.entity.SedeEntity</class>
+        <class>es.ejemplo.cinefest.orm.entity.SalaEntity</class>
+        <class>es.ejemplo.cinefest.orm.entity.PeliculaEntity</class>
+        <class>es.ejemplo.cinefest.orm.entity.EspectadorEntity</class>
+        <class>es.ejemplo.cinefest.orm.entity.EntradaEntity</class>
+        <class>es.ejemplo.cinefest.orm.entity.ValoracionEntity</class>
+        <class>es.ejemplo.cinefest.orm.entity.SesionEntity</class>
+        <!-- Propiedades de ajuste de la conexión y de Hibernate -->
+        <properties>
+            <!-- Driver JDBC de SQLite: la misma clase que en JDBC. La URL no está aquí: la pone OrmFactory al crear la fábrica -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
+            <!-- Dialecto: le dice a Hibernate cómo escribe el SQL SQLite (límites, tipos, autoincremento) -->
+            <property name="hibernate.dialect" value="org.hibernate.community.dialect.SQLiteDialect"/>
+            <!-- Activa las claves foráneas en SQLite (PRAGMA foreign_keys=ON) en cada conexión. SQLite las ignora por defecto: sin esta línea se podría insertar una entrada de una sesión que no existe, o borrar una sede con salas, y no daría error -->
+            <property name="hibernate.connection.foreign_keys" value="true"/>
+            <!-- hbm2ddl.auto: si Hibernate crea o modifica las tablas. none = no toca nada, porque las tablas ya las crea el schema.sql. Con create o update podría borrar o cambiar datos -->
+            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <!-- show_sql: false no saca por consola el SQL que lanza Hibernate; con true se ve cada consulta, útil para depurar -->
+            <property name="hibernate.show_sql" value="false"/>
+        </properties>
+    </persistence-unit>
+</persistence>

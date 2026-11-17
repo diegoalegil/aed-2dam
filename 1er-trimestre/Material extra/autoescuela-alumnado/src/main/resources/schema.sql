@@ -1,0 +1,42 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE IF NOT EXISTS profesores (
+ id_profesor INTEGER PRIMARY KEY AUTOINCREMENT,
+ nombre TEXT NOT NULL,
+ dni TEXT NOT NULL UNIQUE,
+ telefono TEXT,
+ activo INTEGER NOT NULL DEFAULT 1 CHECK (activo IN (0,1))
+);
+CREATE TABLE IF NOT EXISTS vehiculos (
+ matricula TEXT PRIMARY KEY,
+ marca TEXT NOT NULL,
+ modelo TEXT NOT NULL,
+ tipo TEXT NOT NULL CHECK (tipo IN ('COCHE','MOTO','CAMION')),
+ anio INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS alumnos (
+ id_alumno INTEGER PRIMARY KEY AUTOINCREMENT,
+ nombre TEXT NOT NULL,
+ email TEXT NOT NULL UNIQUE,
+ fecha_alta TEXT NOT NULL,
+ id_profesor INTEGER REFERENCES profesores(id_profesor) ON DELETE RESTRICT,
+ activo INTEGER NOT NULL DEFAULT 1 CHECK (activo IN (0,1))
+);
+CREATE TABLE IF NOT EXISTS clases_practicas (
+ id_clase INTEGER PRIMARY KEY AUTOINCREMENT,
+ id_alumno INTEGER NOT NULL REFERENCES alumnos(id_alumno) ON DELETE RESTRICT,
+ id_profesor INTEGER NOT NULL REFERENCES profesores(id_profesor) ON DELETE RESTRICT,
+ matricula TEXT NOT NULL REFERENCES vehiculos(matricula) ON DELETE RESTRICT,
+ fecha TEXT NOT NULL,
+ hora TEXT NOT NULL,
+ duracion_min INTEGER NOT NULL CHECK (duracion_min > 0),
+ precio NUMERIC NOT NULL CHECK (precio >= 0),
+ estado TEXT NOT NULL DEFAULT 'RESERVADA' CHECK (estado IN ('RESERVADA','REALIZADA','CANCELADA'))
+);
+CREATE TABLE IF NOT EXISTS examenes (
+ id_examen INTEGER PRIMARY KEY AUTOINCREMENT,
+ id_alumno INTEGER NOT NULL REFERENCES alumnos(id_alumno) ON DELETE RESTRICT,
+ tipo TEXT NOT NULL CHECK (tipo IN ('TEORICO','PRACTICO')),
+ fecha TEXT NOT NULL,
+ resultado TEXT NOT NULL DEFAULT 'PENDIENTE' CHECK (resultado IN ('PENDIENTE','APTO','NO_APTO')),
+ errores INTEGER CHECK (errores >= 0)
+);

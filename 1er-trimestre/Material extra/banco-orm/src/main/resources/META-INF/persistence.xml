@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.1">
+  <persistence-unit name="bancoPU" transaction-type="RESOURCE_LOCAL">
+    <!-- TODO (README §3): proveedor, una <class> por entidad y las propiedades de SQLite -->
+  </persistence-unit>
+</persistence>
