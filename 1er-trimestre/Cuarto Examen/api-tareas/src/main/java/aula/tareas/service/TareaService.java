@@ -6,27 +6,35 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import aula.tareas.modelo.Tarea;
 import aula.tareas.repository.ITareaRepository;
+import aula.tareas.repository.TareaRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TareaService {
     private final AtomicLong secuencia = new AtomicLong();
     private final ConcurrentSkipListMap<Long, Tarea> tareas = new ConcurrentSkipListMap<>();
-        private final ITareaRepository repository;
+    private final ITareaRepository repository;
 
-    //Esta es la manera de hacerlo con Spring
-    public TareaService(ITareaRepository repository) {
+    //El pasado
+    /**
+    public TareaService() {
+        this.repository = new TareaRepository();
+    }
+     **/
+
+    //Spring
+    public TareaService(@Qualifier("repositoryCsv")  ITareaRepository repository) {
         this.repository = repository;
     }
 
-    //En el pasado le quitamos el valor de los parentesis y despues del = creamos con new
 
     public List<Tarea> listar() {
-        return this.repository.findAll();
+        return repository.findAll();
     }
 
     public Tarea buscar(long id) {
-        return this.repository.findById(id);
+        return repository.findById(id);
     }
 
     public Tarea crear(String titulo) {
@@ -35,5 +43,4 @@ public class TareaService {
         }
         return repository.create(titulo);
     }
-    //Duda cual es la diferencia de devolver como el profe sin el this o como yo que lo puse para probar..
 }
