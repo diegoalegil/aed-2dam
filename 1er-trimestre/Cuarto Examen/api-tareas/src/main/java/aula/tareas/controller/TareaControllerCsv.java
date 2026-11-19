@@ -38,6 +38,19 @@ class TareaControllerCsv {
         return ResponseEntity.created(URI.create("/api/tareas/" + tarea.id())).body(tarea);
     }
 
+    @PutMapping("/{id}")
+    ResponseEntity<Tarea> actualizar (@PathVariable long id, @Valid @RequestBody NuevaTarea peticion) {
+        return ResponseEntity.ofNullable(servicio.actualizar(id,peticion.titulo()));
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> borrar (@PathVariable long id) {
+        if (servicio.borrar(id)){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     public record NuevaTarea(@NotBlank String titulo) {
     }
 }

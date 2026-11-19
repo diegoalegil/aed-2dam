@@ -44,7 +44,7 @@ public class TareaControllerJson {
     })
     ResponseEntity<Tarea> buscar(@PathVariable long id) {
         //return ResponseEntity.ofNullable(servicio.buscar(id));
-        return null;
+        return ResponseEntity.ofNullable(serviceJson.buscar(id));
     }
 
     @PostMapping
@@ -58,5 +58,28 @@ public class TareaControllerJson {
         //return ResponseEntity.created(URI.create("/api/tareas/" + tarea.id())).body(tarea);
         Tarea tarea = serviceJson.crear(peticion.titulo());
         return ResponseEntity.created(URI.create("/api/json/tareas/" + tarea.id())).body(tarea);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualiza el titulo de una tarea del fichero json")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Tarea actualizada"),
+            @ApiResponse(responseCode = "404", description = "No existe ninguna tarea con ese id")
+    })
+    ResponseEntity<Tarea> actualizar(@PathVariable long id, @Valid @RequestBody TareaControllerCsv.NuevaTarea peticion) {
+        return ResponseEntity.ofNullable(serviceJson.actualizar(id, peticion.titulo()));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Borra una tarea del fichero json")
+    @ApiResponses({
+            @ApiResponse (responseCode = "204", description = "Tarea borrada"),
+            @ApiResponse (responseCode = "404", description = "No existe tarea con ese id")
+    })
+    ResponseEntity<Void> borrar (@PathVariable long id) {
+        if (serviceJson.borrar(id)){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
