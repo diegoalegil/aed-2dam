@@ -3,10 +3,13 @@ package aula.tareas.repository;
 import aula.tareas.modelo.Tarea;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("repositoryCsv")
-public class TareaRepositoryCsv implements ITareaRepository{
-    private  Path path;
+public class TareaRepositoryCsv implements ITareaRepository {
+    private Path path;
     private final CSVFormat inputFormat = CSVFormat.DEFAULT.builder()
             .setHeader()
             .setSkipHeaderRecord(true).build();
@@ -29,11 +32,29 @@ public class TareaRepositoryCsv implements ITareaRepository{
 
     @Override
     public Tarea create(String titulo) {
-        return null;
+        List<Tarea> lista = new ArrayList<>(findAll());
+        long id = 1;
+        for (Tarea t : lista) {
+            if (t.id() >= id) {
+                id = t.id() + 1;
+            }
+        }
+        Tarea tarea = new Tarea(id, titulo.strip());
+        lista.add(tarea);
+        saveAll(lista);
+        return tarea;
     }
 
     @Override
     public boolean delete(long identificador) {
+        List<Tarea> lista = new ArrayList<>(findAll());
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).id() == identificador) {
+                lista.remove(i);
+                saveAll(lista);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -53,7 +74,7 @@ public class TareaRepositoryCsv implements ITareaRepository{
                 }
             }
             return result;
-        }catch (Exception e) {
+        } catch (Exception e) {
             return List.of();
         }
 
@@ -61,11 +82,35 @@ public class TareaRepositoryCsv implements ITareaRepository{
 
     @Override
     public Tarea findById(long identificador) {
+        for (Tarea tarea : findAll()) {
+            if (tarea.id() == identificador) {
+                return tarea;
+            }
+        }
         return null;
     }
 
     @Override
     public Tarea update(Tarea tarea) {
+        List<Tarea> lista = new ArrayList<>(findAll());
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).id() == tarea.id()) {
+                lista.set(i, tarea);
+                saveAll(lista);
+                return tarea;
+            }
+        }
         return null;
+    }
+
+    private void saveAll(List<Tarea> items) {
+        try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8);
+             CSVPrinter printer = new CSVPrinter(writer, outputFormat)) {
+            for (Tarea t : items) {
+                printer.printRecord(t.id(), t.titulo());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
