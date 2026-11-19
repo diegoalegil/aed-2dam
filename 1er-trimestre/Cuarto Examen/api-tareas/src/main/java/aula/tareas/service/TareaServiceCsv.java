@@ -16,14 +16,15 @@ public class TareaServiceCsv implements ITareaService {
     private final ITareaRepository repository;
 
     //El pasado
+
     /**
-    public TareaService() {
-        this.repository = new TareaRepository();
-    }
+     * public TareaService() {
+     * this.repository = new TareaRepository();
+     * }
      **/
 
     //Spring
-    public TareaServiceCsv(@Qualifier("repositoryCsv")  ITareaRepository repository) {
+    public TareaServiceCsv(@Qualifier("repositoryCsv") ITareaRepository repository) {
         this.repository = repository;
     }
 
@@ -41,5 +42,18 @@ public class TareaServiceCsv implements ITareaService {
             return null;
         }
         return repository.create(titulo);
+    }
+
+    @Override
+    public Tarea actualizar(long id, String titulo) {
+        if (titulo == null || titulo.isBlank()) {
+            return null;
+        }
+        return repository.update(new Tarea(id,titulo.strip()));
+    }
+
+    @Override
+    public boolean borrar(long id) {
+        return repository.delete(id);
     }
 }

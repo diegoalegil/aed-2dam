@@ -8,12 +8,14 @@ public interface ITareaService {
 
     /**
      * Soy la documentacion del metodo xD
+     *
      * @return
      */
     public List<Tarea> listar();
 
     /**
      * Soy la documentacion del metodo x2
+     *
      * @param id
      * @return
      */
@@ -21,8 +23,13 @@ public interface ITareaService {
 
     /**
      * Sigo siendo la documentacion del metodo, tan importante y solo suma nota si tienes mas de un 8 xd
+     *
      * @param titulo
      * @return
      */
     public Tarea crear(String titulo);
+
+    public Tarea actualizar(long id, String titulo);
+
+    public boolean borrar(long id);
 }

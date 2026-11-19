@@ -33,4 +33,18 @@ public class TareaServiceJson implements ITareaService {
         }
         return tareaRepositoryJson.create(titulo);
     }
+
+    @Override
+    public Tarea actualizar(long id, String titulo) {
+
+        if (titulo == null || titulo.isBlank()){
+            return null;
+        }
+        return tareaRepositoryJson.update(new Tarea(id,titulo.strip()));
+    }
+
+    @Override
+    public boolean borrar(long id) {
+        return tareaRepositoryJson.delete(id);
+    }
 }
