@@ -1,19 +1,17 @@
 package aula.tareas.controller;
 
-import aula.tareas.modelo.Tarea;
+import aula.tareas.api.TareaRequest;
 import aula.tareas.service.ITareaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,7 +30,7 @@ public class TareaControllerJson {
     @GetMapping
     @Operation(summary = "Obtener todas las tareas desde el fichero json")
     @ApiResponses(@ApiResponse(responseCode = "200", description = "Se obtiene el listado de tareas"))
-    List<Tarea> listar() {
+    List<TareaRequest> listar() {
         return serviceJson.listar();
     }
 
@@ -42,7 +40,7 @@ public class TareaControllerJson {
             @ApiResponse(responseCode = "200", description = "Se obtiene la tarea indicada a traves de su id"),
             @ApiResponse(responseCode = "404", description = "No existe ninguna tarea con ese id")
     })
-    ResponseEntity<Tarea> buscar(@PathVariable long id) {
+    ResponseEntity<TareaRequest> buscar(@PathVariable long id) {
         //return ResponseEntity.ofNullable(servicio.buscar(id));
         return ResponseEntity.ofNullable(serviceJson.buscar(id));
     }
@@ -53,10 +51,10 @@ public class TareaControllerJson {
             @ApiResponse(responseCode = "201", description = "Tarea creada"),
             @ApiResponse(responseCode = "400", description = "El titulo esta vacio")
     })
-    ResponseEntity<Tarea> crear(@Valid @RequestBody TareaControllerCsv.NuevaTarea peticion) {
+    ResponseEntity<TareaRequest> crear(@Valid @RequestBody TareaControllerCsv.NuevaTarea peticion) {
         //Tarea tarea = servicio.crear(peticion.titulo());
         //return ResponseEntity.created(URI.create("/api/tareas/" + tarea.id())).body(tarea);
-        Tarea tarea = serviceJson.crear(peticion.titulo());
+        TareaRequest tarea = serviceJson.crear(peticion.titulo());
         return ResponseEntity.created(URI.create("/api/json/tareas/" + tarea.id())).body(tarea);
     }
 
@@ -66,7 +64,7 @@ public class TareaControllerJson {
             @ApiResponse(responseCode = "200", description = "Tarea actualizada"),
             @ApiResponse(responseCode = "404", description = "No existe ninguna tarea con ese id")
     })
-    ResponseEntity<Tarea> actualizar(@PathVariable long id, @Valid @RequestBody TareaControllerCsv.NuevaTarea peticion) {
+    ResponseEntity<TareaRequest> actualizar(@PathVariable long id, @Valid @RequestBody TareaControllerCsv.NuevaTarea peticion) {
         return ResponseEntity.ofNullable(serviceJson.actualizar(id, peticion.titulo()));
     }
 

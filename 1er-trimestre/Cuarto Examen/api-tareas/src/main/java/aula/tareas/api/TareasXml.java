@@ -1,4 +1,4 @@
-package aula.tareas.modelo;
+package aula.tareas.api;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -12,12 +12,12 @@ public class TareasXml {
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "tarea")
-    public List<Tarea> tareas = new ArrayList<>();
+    public List<TareaRequest> tareas = new ArrayList<>();
 
     public TareasXml() {
     }
 
-    public TareasXml(List<Tarea> tareas) {
+    public TareasXml(List<TareaRequest> tareas) {
         this.tareas = new ArrayList<>(tareas);
     }
 

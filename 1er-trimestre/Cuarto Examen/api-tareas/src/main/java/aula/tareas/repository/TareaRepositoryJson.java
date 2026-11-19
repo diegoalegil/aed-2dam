@@ -1,6 +1,6 @@
 package aula.tareas.repository;
 
-import aula.tareas.modelo.Tarea;
+import aula.tareas.api.TareaRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
@@ -18,7 +18,7 @@ public class TareaRepositoryJson implements ITareaRepository {
     private Path path;
     private final ObjectMapper mapper = new ObjectMapper();
     private static final String url = "data/tarea.json";
-    private List<Tarea> lista;
+    private List<TareaRequest> lista;
 
     public TareaRepositoryJson() {
         //path = Path.of("data", "tarea.json");
@@ -41,13 +41,13 @@ public class TareaRepositoryJson implements ITareaRepository {
         //Aqui pregunta si esto sabremos hacerlo, nadie responde
         //Luego esta preguntando si esto lo podemos poner en el metodo de abajo que habria que hace replace para que funcione, la linea 51 mio al 61 mio no la de el que tenemos diferente, el cambio ahora el String url por String jdbcUrl
         //Terminar codigo para mañana tanto CSV, JSON y agregar XML para mañana todo entendido e importante entender el tema de las conexiones
-        
+
         //String jdbcUrl = "jdbc:sqlite:data/tarea.sqlite3";
         //ormFactory.crear(jdbcUrl);
 
         //Esto lo pongo yo, no esta en el codigo del profe:
         //el contador empieza en el id mas alto del fichero, porque si no al reiniciar la app vuelve a 0 y repite ids
-        secuencia.set(lista.stream().mapToLong(Tarea::id).max().orElse(0));
+        secuencia.set(lista.stream().mapToLong(TareaRequest::id).max().orElse(0));
     }
 
     public TareaRepositoryJson(String url) {
@@ -62,9 +62,9 @@ public class TareaRepositoryJson implements ITareaRepository {
     }
 
     @Override
-    public Tarea create(String titulo) {
+    public TareaRequest create(String titulo) {
         long id = secuencia.incrementAndGet();
-        var tarea = new Tarea(id, titulo.strip());
+        var tarea = new TareaRequest(id, titulo.strip());
         lista.add(tarea);
         saveAll(lista);
         return tarea;
@@ -80,17 +80,17 @@ public class TareaRepositoryJson implements ITareaRepository {
     }
 
     @Override
-    public List<Tarea> findAll() {
+    public List<TareaRequest> findAll() {
         return List.copyOf(lista);
     }
 
     @Override
-    public Tarea findById(long identificador) {
+    public TareaRequest findById(long identificador) {
         return findAll().stream().filter(t -> t.id() == identificador).findFirst().orElse(null);
     }
 
     @Override
-    public Tarea update(Tarea tarea) {
+    public TareaRequest update(TareaRequest tarea) {
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).id() == tarea.id()) {
                 lista.set(i, tarea);
@@ -101,7 +101,7 @@ public class TareaRepositoryJson implements ITareaRepository {
         return null;
     }
 
-    private void saveAll(List<Tarea> items) {
+    private void saveAll(List<TareaRequest> items) {
         try {
             Path parent = path.getParent();
             if (parent != null) {
@@ -114,10 +114,10 @@ public class TareaRepositoryJson implements ITareaRepository {
         }
     }
 
-    public List<Tarea> getAll() {
+    public List<TareaRequest> getAll() {
         try {
             return new ArrayList<>(mapper.readValue(
-                    path.toFile(), new TypeReference<List<Tarea>>() {
+                    path.toFile(), new TypeReference<List<TareaRequest>>() {
                     }));
         } catch (Exception exception) {
             //Logger

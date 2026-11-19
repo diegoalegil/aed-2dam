@@ -1,6 +1,6 @@
 package aula.tareas.service;
 
-import aula.tareas.modelo.Tarea;
+import aula.tareas.api.TareaRequest;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface ITareaService {
      *
      * @return
      */
-    public List<Tarea> listar();
+    public List<TareaRequest> listar();
 
     /**
      * Soy la documentacion del metodo x2
@@ -19,7 +19,7 @@ public interface ITareaService {
      * @param id
      * @return
      */
-    public Tarea buscar(long id);
+    public TareaRequest buscar(long id);
 
     /**
      * Sigo siendo la documentacion del metodo, tan importante y solo suma nota si tienes mas de un 8 xd
@@ -27,9 +27,9 @@ public interface ITareaService {
      * @param titulo
      * @return
      */
-    public Tarea crear(String titulo);
+    public TareaRequest crear(String titulo);
 
-    public Tarea actualizar(long id, String titulo);
+    public TareaRequest actualizar(long id, String titulo);
 
     public boolean borrar(long id);
 }

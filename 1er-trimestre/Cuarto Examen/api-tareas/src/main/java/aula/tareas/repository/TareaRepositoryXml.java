@@ -1,7 +1,7 @@
 package aula.tareas.repository;
 
-import aula.tareas.modelo.Tarea;
-import aula.tareas.modelo.TareasXml;
+import aula.tareas.api.TareaRequest;
+import aula.tareas.api.TareasXml;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.IOException;
@@ -21,13 +21,13 @@ public class TareaRepositoryXml implements ITareaRepository {
     private Path path;
     private final XmlMapper mapper = new XmlMapper();
     private static final String url = "data/tarea.xml";
-    private List<Tarea> lista;
+    private List<TareaRequest> lista;
 
     public TareaRepositoryXml() {
         this(url);
         lista = getAll();
 
-        secuencia.set(lista.stream().mapToLong(Tarea::id).max().orElse(0));
+        secuencia.set(lista.stream().mapToLong(TareaRequest::id).max().orElse(0));
     }
 
     public TareaRepositoryXml(String url) {
@@ -41,7 +41,7 @@ public class TareaRepositoryXml implements ITareaRepository {
         }
     }
 
-    public List<Tarea> getAll() {
+    public List<TareaRequest> getAll() {
         try {
             TareasXml caja = mapper.readValue(path.toFile(), TareasXml.class);
             return new ArrayList<>(caja.tareas);
@@ -50,7 +50,7 @@ public class TareaRepositoryXml implements ITareaRepository {
         }
     }
 
-    private void saveAll(List<Tarea> items) {
+    private void saveAll(List<TareaRequest> items) {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), new TareasXml(items));
         } catch (Exception exception) {
@@ -60,9 +60,9 @@ public class TareaRepositoryXml implements ITareaRepository {
 
 
     @Override
-    public Tarea create(String titulo) {
+    public TareaRequest create(String titulo) {
         long id = secuencia.incrementAndGet();
-        Tarea tarea = new Tarea(id, titulo.strip());
+        TareaRequest tarea = new TareaRequest(id, titulo.strip());
         lista.add(tarea);
         saveAll(lista);
         return tarea;
@@ -81,13 +81,13 @@ public class TareaRepositoryXml implements ITareaRepository {
     }
 
     @Override
-    public List<Tarea> findAll() {
+    public List<TareaRequest> findAll() {
         return List.copyOf(lista);
     }
 
     @Override
-    public Tarea findById(long identificador) {
-        for (Tarea tarea : lista) {
+    public TareaRequest findById(long identificador) {
+        for (TareaRequest tarea : lista) {
             if (tarea.id() == identificador) {
                 return tarea;
             }
@@ -96,7 +96,7 @@ public class TareaRepositoryXml implements ITareaRepository {
     }
 
     @Override
-    public Tarea update(Tarea tarea) {
+    public TareaRequest update(TareaRequest tarea) {
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).id() == tarea.id()) {
                 lista.set(i, tarea);
